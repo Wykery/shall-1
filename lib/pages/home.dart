@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shall/decoration.dart';
 import 'package:shall/models/category.dart';
 import 'package:shall/models/product.dart';
+import 'package:shall/models/shop.dart';
+import 'package:shall/app_bar.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
@@ -9,24 +13,20 @@ class HomePage extends StatelessWidget {
   static const double categoriesElemWidth = 150;
   static const double categoriesElemHeight = 180;
 
-  List<Category> shops = [];
+  List<Shop> shops = [];
   static const double shopsElemWidth = 130;
   static const double shopsElemHeight = 150;
 
   List<Product> topDiscounts = [];
   static const double topDiscountsWidth = 100;
-  static const double topDiscountsHeight = 160;
+  static const double topDiscountsHeight = 150;
 
   @override
   Widget build(BuildContext context) {
     categories = buildCategories();
     shops = buildShops();
     topDiscounts = buildTopDiscounts();
-    return Scaffold(
-      appBar: appBar(),
-      body: pageBody(),
-
-    );
+    return pageBody();
   }
 
   Widget pageBody() {
@@ -40,61 +40,59 @@ class HomePage extends StatelessWidget {
           SizedBox(
             height: 10,
           ),
-          horizontalScroll(categoriesElemHeight, categoriesElemWidth, categories),
+          horizontalCategoryScroll(categoriesElemHeight, categoriesElemWidth, categories),
       
           headerText("Shops"),
           SizedBox(
             height: 10,
           ),
-          horizontalScroll(shopsElemHeight, shopsElemWidth, shops),
+          horizontalShopScroll(shopsElemHeight, shopsElemWidth, shops),
       
           headerText("Top Discounts"),
           SizedBox(
             height: 10,
           ),
-          SizedBox(
-            height: topDiscounts.length ~/ 2 * (topDiscountsHeight + 20),
-            child: GridView.count(
-              padding: EdgeInsets.only(left: 20, right: 20),
-              mainAxisSpacing: 20,
-              crossAxisSpacing: 20,
-              crossAxisCount: 3,
-              physics: NeverScrollableScrollPhysics(),
-              children: List.generate(topDiscounts.length, (index) {
-                return Container(
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-
-                      ),
-                    ],
-                    borderRadius: BorderRadius.circular(15),
-                    color: Colors.green[600],
-                  ),
-                  width: topDiscountsWidth,
-                  height: topDiscountsHeight,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Image.asset(topDiscounts[index].imagePath, scale: categoriesElemWidth / 70,),
-                      Column(
-                        children: [
-                          Text(topDiscounts[index].name),
-                          Text(topDiscounts[index].price),
-                        ],
-                      )
-                    ],
-                  ),
-                );
-              }),
-            ),
-          )
+          productGrid(topDiscounts, topDiscountsHeight, topDiscountsWidth)
         ],
       ),
     );
   }
 
-  SizedBox horizontalScroll(double height, double width, List<Category> scrollable) {
+  SizedBox productGrid(List<Product> elements, double elemHeight, double elemWidth) {
+    return SizedBox(
+          height: elements.length ~/ 2 * (elemHeight + 20) + 20,
+          child: GridView.count(
+            childAspectRatio: elemWidth / elemHeight,
+            padding: EdgeInsets.only(left: 20, right: 20),
+            mainAxisSpacing: 20,
+            crossAxisSpacing: 20,
+            crossAxisCount: 3,
+            physics: NeverScrollableScrollPhysics(),
+            children: List.generate(elements.length, (index) {
+              return Container(
+                decoration: UIDecoration.boxDecoration(),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(5),
+                      child: Image.asset(elements[index].imagePath,)
+                    ),
+                    Column(
+                      children: [
+                        Text(elements[index].name),
+                        Text(elements[index].price),
+                      ],
+                    )
+                  ],
+                ),
+              );
+            }),
+          ),
+        );
+  }
+
+  SizedBox horizontalCategoryScroll(double height, double width, List<Category> scrollable) {
     return SizedBox(
       height: height,
       child: ListView.separated(
@@ -133,6 +131,45 @@ class HomePage extends StatelessWidget {
     );
   }
 
+  SizedBox horizontalShopScroll(double height, double width, List<Shop> scrollable) {
+    return SizedBox(
+      height: height,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: scrollable.length,
+        itemBuilder: (context, index) {
+          return Container(
+            width: width,
+            decoration: BoxDecoration(
+              color: Colors.green[600],
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0x401D1617),
+                  blurRadius: 40,
+                  spreadRadius: 0,
+                )
+              ]
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 25, right: 25),
+                  child: SvgPicture.asset(scrollable[index].iconPath, width: shopsElemWidth * 0.6, height: shopsElemHeight* 0.6,),
+                ),
+                Text(scrollable[index].name),
+              ],
+
+            ),
+          );
+        },
+        separatorBuilder:(context, index) => SizedBox(width: 25,),
+        padding: EdgeInsets.only(left: 20, right: 20),
+      ),
+    );
+  }
+
   List<Category> buildCategories() {
     List<Category> categories = [];
 
@@ -152,20 +189,20 @@ class HomePage extends StatelessWidget {
     return categories;
   }
 
-  List<Category> buildShops() {
-    List<Category> shops = [];
+  List<Shop> buildShops() {
+    List<Shop> shops = [];
 
     shops.add(
-      Category(name: "Maxima", icon: Icons.abc, height: shopsElemHeight, width: shopsElemWidth)
+      Shop(name: "Maxima", iconPath: "images/maxima.svg", height: shopsElemHeight, width: shopsElemWidth)
     );
     shops.add(
-      Category(name: "Lidl", icon: Icons.arrow_back, height: shopsElemHeight, width: shopsElemWidth)
+      Shop(name: "Lidl", iconPath: "images/lidl.svg", height: shopsElemHeight, width: shopsElemWidth)
     );
     shops.add(
-      Category(name: "Hesburger", icon: Icons.lunch_dining, height: shopsElemHeight, width: shopsElemWidth)
+      Shop(name: "Hesburger", iconPath: "images/hesburger.svg", height: shopsElemHeight, width: shopsElemWidth)
     );
     shops.add(
-      Category(name: "Rimi", icon: Icons.breakfast_dining, height: shopsElemHeight, width: shopsElemWidth)
+      Shop(name: "Senukai", iconPath: "images/senukai.svg", height: shopsElemHeight, width: shopsElemWidth)
     );
 
     return shops;
@@ -178,13 +215,16 @@ class HomePage extends StatelessWidget {
       Product(name: "Cheeseburger", price: "1.00€", imagePath: "images/cheeseburger.jpg", height: topDiscountsHeight, width: topDiscountsWidth)
     );
     discounts.add(
-      Product(name: "Maxima", price: "1.00€", imagePath: "images/cheeseburger.jpg", height: topDiscountsHeight, width: topDiscountsWidth)
+      Product(name: "RTX 4090 Ti", price: "700.00€", imagePath: "images/rtx4090ti.jpg", height: topDiscountsHeight, width: topDiscountsWidth)
     );
     discounts.add(
-      Product(name: "Maxima", price: "1.00€", imagePath: "images/cheeseburger.jpg", height: topDiscountsHeight, width: topDiscountsWidth)
+      Product(name: "Matches", price: "0.01€", imagePath: "images/matches.jpg", height: topDiscountsHeight, width: topDiscountsWidth)
     );
     discounts.add(
-      Product(name: "Maxima", price: "1.00€", imagePath: "images/cheeseburger.jpg", height: topDiscountsHeight, width: topDiscountsWidth)
+      Product(name: "Banana", price: "0.60€", imagePath: "images/banana.jpg", height: topDiscountsHeight, width: topDiscountsWidth)
+    );
+    discounts.add(
+      Product(name: "The art of war", price: "15.00€", imagePath: "images/art_of_war.jpg", height: topDiscountsHeight, width: topDiscountsWidth)
     );
 
     return discounts;
@@ -257,30 +297,5 @@ class HomePage extends StatelessWidget {
             ),
           ),
         );
-  }
-
-  AppBar appBar() {
-    return AppBar(
-      title: Text("Home", style: TextStyle(fontFamily: 'Rubik', fontWeight: FontWeight.w900, fontSize: 30),),
-      centerTitle: true,
-      elevation: 0,
-      actions: [
-          GestureDetector(
-            onTap: () {
-              print("test");
-            },
-            child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.green[600]
-            ),
-            margin: EdgeInsets.all(10),
-            width: 37,
-            height: 37,
-            child: Icon(Icons.more_horiz),
-                      ),
-          ),
-      ]
-    );
   }
 }

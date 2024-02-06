@@ -1,15 +1,12 @@
-
-class Product {
+class Shop {
   String name;
-  String price;
-  String imagePath;
+  String iconPath;
   double width;
   double height;
 
-  Product({
+  Shop({
     required this.name,
-    required this.price,
-    required this.imagePath,
+    required this.iconPath,
     required this.height,
     required this.width
   });
