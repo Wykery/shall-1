@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 
-class Product {
+class Category {
   String name;
-  String price;
-  String imagePath;
+  IconData icon;
   double width;
   double height;
 
-  Product({
+  Category({
     required this.name,
-    required this.price,
-    required this.imagePath,
+    required this.icon,
     required this.height,
     required this.width
   });
 }
+
