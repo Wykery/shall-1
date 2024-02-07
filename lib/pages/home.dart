@@ -3,8 +3,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shall/decoration.dart';
 import 'package:shall/models/category.dart';
 import 'package:shall/models/product.dart';
+import 'package:shall/models/product_view.dart';
 import 'package:shall/models/shop.dart';
-import 'package:shall/app_bar.dart';
+import 'package:shall/header_text.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
@@ -26,10 +27,10 @@ class HomePage extends StatelessWidget {
     categories = buildCategories();
     shops = buildShops();
     topDiscounts = buildTopDiscounts();
-    return pageBody();
+    return pageBody(context);
   }
 
-  Widget pageBody() {
+  Widget pageBody(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,13 +53,13 @@ class HomePage extends StatelessWidget {
           SizedBox(
             height: 10,
           ),
-          productGrid(topDiscounts, topDiscountsHeight, topDiscountsWidth)
+          productGrid(topDiscounts, topDiscountsHeight, topDiscountsWidth, context)
         ],
       ),
     );
   }
 
-  SizedBox productGrid(List<Product> elements, double elemHeight, double elemWidth) {
+  SizedBox productGrid(List<Product> elements, double elemHeight, double elemWidth, BuildContext context) {
     return SizedBox(
           height: elements.length ~/ 2 * (elemHeight + 20) + 20,
           child: GridView.count(
@@ -69,22 +70,35 @@ class HomePage extends StatelessWidget {
             crossAxisCount: 3,
             physics: NeverScrollableScrollPhysics(),
             children: List.generate(elements.length, (index) {
-              return Container(
-                decoration: UIDecoration.boxDecoration(),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.all(5),
-                      child: Image.asset(elements[index].imagePath,)
-                    ),
-                    Column(
-                      children: [
-                        Text(elements[index].name),
-                        Text(elements[index].price),
-                      ],
-                    )
-                  ],
+              return GestureDetector(
+                onTap: () async{
+                  await showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (BuildContext context) {
+                      return ProductView(
+                        product: elements[index]
+                      );
+                    }
+                  );
+                },
+                child: Container(
+                  decoration: UIDecoration.boxDecoration(),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(5),
+                        child: Image.asset(elements[index].imagePath,)
+                      ),
+                      Column(
+                        children: [
+                          Text(elements[index].name),
+                          Text(elements[index].bestPrice),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               );
             }),
@@ -212,44 +226,52 @@ class HomePage extends StatelessWidget {
     List<Product> discounts = [];
 
     discounts.add(
-      Product(name: "Cheeseburger", price: "1.00€", imagePath: "images/cheeseburger.jpg", height: topDiscountsHeight, width: topDiscountsWidth)
+      Product(
+        name: "Cheeseburger", 
+        bestPrice: "1.00€",
+        allPrices: ["1.00", "299.99€"], 
+        allShops: ["Hesburger", "Burger King"],
+        imagePath: "images/cheeseburger.jpg", 
+        height: topDiscountsHeight, width: topDiscountsWidth)
     );
     discounts.add(
-      Product(name: "RTX 4090 Ti", price: "700.00€", imagePath: "images/rtx4090ti.jpg", height: topDiscountsHeight, width: topDiscountsWidth)
+      Product(
+        name: "RTX 4090 Ti", 
+        bestPrice: "700.00€", 
+        allPrices: ["700.00€", "1700€", "2300€"],
+        allShops: ["RD Electronics", "220.lv", "1A.lv"],
+        imagePath: "images/rtx4090ti.jpg", 
+        height: topDiscountsHeight, width: topDiscountsWidth)
     );
     discounts.add(
-      Product(name: "Matches", price: "0.01€", imagePath: "images/matches.jpg", height: topDiscountsHeight, width: topDiscountsWidth)
+      Product(
+        name: "Matches", 
+        bestPrice: "0.01€", 
+        allPrices: ["0.01€", "0.03€"],
+        allShops: ["Maxima", "Rimi"],
+        imagePath: "images/matches.jpg", 
+        height: topDiscountsHeight, width: topDiscountsWidth)
     );
     discounts.add(
-      Product(name: "Banana", price: "0.60€", imagePath: "images/banana.jpg", height: topDiscountsHeight, width: topDiscountsWidth)
+      Product(
+        name: "Banana", 
+        bestPrice: "0.60€", 
+        allPrices: ["0.60€", "0.79€", "30.00€"],
+        allShops: ["Lidl", "Maxima", "Rimi"],
+        imagePath: "images/banana.jpg", 
+        height: topDiscountsHeight, width: topDiscountsWidth)
     );
     discounts.add(
-      Product(name: "The art of war", price: "15.00€", imagePath: "images/art_of_war.jpg", height: topDiscountsHeight, width: topDiscountsWidth)
+      Product(
+        name: "The art of war", 
+        bestPrice: "15.00€", 
+        allPrices: ["15.00€", "20.00€", "22.00€"],
+        allShops: ["MnogoKnig", "Zvaigzne ABC", "Janis Roze"],
+        imagePath: "images/art_of_war.jpg", 
+        height: topDiscountsHeight, width: topDiscountsWidth)
     );
 
     return discounts;
-  }
-
-  Column headerText(String str) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          height: 30,
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 20),
-          child: Text(
-            str,
-            style: TextStyle(
-              fontFamily: 'Rubik',
-              fontWeight: FontWeight.w900,
-              fontSize: 20
-            ),
-          ),
-        ),
-      ],
-    );
   }
 
   Container textField() {
