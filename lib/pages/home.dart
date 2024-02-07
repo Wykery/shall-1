@@ -229,7 +229,7 @@ class HomePage extends StatelessWidget {
       Product(
         name: "Cheeseburger", 
         bestPrice: "1.00€",
-        allPrices: ["1.00", "299.99€"], 
+        allPrices: ["1.00€", "299.99€"], 
         allShops: ["Hesburger", "Burger King"],
         imagePath: "images/cheeseburger.jpg", 
         height: topDiscountsHeight, width: topDiscountsWidth)
@@ -238,7 +238,7 @@ class HomePage extends StatelessWidget {
       Product(
         name: "RTX 4090 Ti", 
         bestPrice: "700.00€", 
-        allPrices: ["700.00€", "1700€", "2300€"],
+        allPrices: ["700.00€", "1700.00€", "2300.00€"],
         allShops: ["RD Electronics", "220.lv", "1A.lv"],
         imagePath: "images/rtx4090ti.jpg", 
         height: topDiscountsHeight, width: topDiscountsWidth)

@@ -25,7 +25,7 @@ class CardsPage extends StatelessWidget {
               height: 10,
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 30, right: 30),
+              padding: const EdgeInsets.only(left: 45, right: 45),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(15),
                 child: Image.asset("images/hesburger.jpg"),
