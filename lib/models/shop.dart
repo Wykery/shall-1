@@ -1,12 +1,12 @@
 class Shop {
   String name;
-  String iconPath;
+  String imagePath;
   double width;
   double height;
 
   Shop({
     required this.name,
-    required this.iconPath,
+    required this.imagePath,
     required this.height,
     required this.width
   });
