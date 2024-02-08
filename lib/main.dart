@@ -1,9 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shall/pages/home.dart';
-import 'package:shall/pages/cards.dart';
+import 'package:shall/pages/outifit.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        fontFamily: 'Coolvetica',
+        colorScheme: ColorScheme(
+          brightness: Brightness.dark,
+          primary: Color.fromARGB(255, 255, 255, 255),
+          onPrimary: Color.fromARGB(255, 0, 0, 0),
+          secondary: Color.fromARGB(255, 0, 0, 0),
+          onSecondary: Color.fromARGB(255, 0, 0, 0),
+          error: Colors.orange,
+          onError: const Color(0xFFFFFFFF),
+          background: Color.fromARGB(255, 255, 255, 255),
+          onBackground: Color.fromARGB(255, 0, 0, 0),
+          surface: Color.fromARGB(255, 255, 255, 255),
+          onSurface: Color.fromARGB(255, 0, 0, 0),
+        )
+      ),
+      home: MainApp()
+    );
+  }
 }
 
 class MainApp extends StatefulWidget {
@@ -17,9 +44,9 @@ class MainApp extends StatefulWidget {
 class _MainAppState
     extends State<MainApp> {
   int _selectedIndex = 0;
-  static List<Widget> _widgetOptions = <Widget>[
+    static List<Widget> _widgetOptions = <Widget>[
     HomePage(),
-    CardsPage(),
+    outfitChoicePage()
   ];
   static List<AppBar> _appBarOptions = [
     appBar("Home"),
@@ -34,71 +61,133 @@ class _MainAppState
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        fontFamily: 'Rubik',
-        colorScheme: ColorScheme(
-          brightness: Brightness.dark,
-          primary: const Color.fromRGBO(102, 187, 106, 1),
-          onPrimary: const Color(0xFFFFFFFF),
-          secondary: const Color.fromRGBO(129, 199, 132, 1),
-          onSecondary: const Color(0xFFFFFFFF),
-          error: Colors.orange,
-          onError: const Color(0xFFFFFFFF),
-          background: const Color.fromRGBO(66, 66, 66, 1),
-          onBackground: const Color(0xFFFFFFFF),
-          surface: const Color.fromRGBO(76, 175, 80, 1),
-          onSurface: const Color(0xFFFFFFFF),
-        )
-      ),
-      home: Scaffold(
+    return Scaffold(
+        drawer: drawer(),
         appBar: _appBarOptions.elementAt(_selectedIndex),
+        floatingActionButton: Container(
+          decoration: BoxDecoration(border: Border.all(color: Colors.black, width: 2)),
+          width: 400,
+          child: FloatingActionButton(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => outfitChoicePage())
+              );
+            },
+            isExtended: true,
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            shape: BeveledRectangleBorder(borderRadius: BorderRadius.zero) ,
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black),
+                borderRadius: BorderRadius.circular(10)
+              ),
+              child: Icon(Icons.add, size: 40,)),
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: _widgetOptions.elementAt(_selectedIndex),
-        bottomNavigationBar: navigationBar(),
-      ),
-    );
+      );
   }
 
   static appBar(String text) {
     return AppBar(
-      title: Text(text, style: TextStyle(fontFamily: 'Rubik', fontWeight: FontWeight.w900, fontSize: 30),),
+      title: Text(text, style: TextStyle(fontFamily: 'Coolvetica', fontWeight: FontWeight.w800, fontSize: 30, color: Colors.black),),
       centerTitle: true,
       elevation: 0,
       actions: [
           GestureDetector(
             onTap: () {
-              print("test");
+              print("test1");
             },
             child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.green[600]
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              width: 37,
+              height: 37,
+              child: Icon(Icons.account_circle_outlined),
             ),
-            margin: EdgeInsets.all(10),
-            width: 37,
-            height: 37,
-            child: Icon(Icons.more_horiz),
-                      ),
           ),
-      ]
+          GestureDetector(
+            onTap: () {
+              print("test2");
+            },
+
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              width: 37,
+              height: 37,
+              child: Icon(Icons.find_replace),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              print("test3");
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              width: 37,
+              height: 37,
+              child: Icon(Icons.favorite),
+            ),
+          ),
+      ],
     );
   }
 
-  BottomNavigationBar navigationBar() {
-    return BottomNavigationBar(
-      items: [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: "Home",
+  Drawer drawer() {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          SizedBox(height:100,),
+          makeListTile("Female", Icons.woman),
+          makeListTile("Male", Icons.man),
+          makeListTile("Kids", Icons.child_care),
+          makeListTile("Accesories", Icons.earbuds),
+          SizedBox(height: 300),
+          makeTextButton("Support"),
+          makeTextButton("Products and quality"),
+          makeTextButton("Delivery"),
+          makeTextButton("Contacts"),
+          makeTextButton("Legal information")
+        ],
+      )
+    );
+  }
+
+
+  GestureDetector makeTextButton(String text) {
+    return GestureDetector(
+      onTap: () => print(text),
+      child: Container(
+        padding: EdgeInsets.only(left: 20),
+        child: Text(
+        text, 
+        style: TextStyle(
+          fontSize: 16,
+          decoration: TextDecoration.underline
+            ),
+          ),
+      ),
+    );
+  }
+  
+  GestureDetector makeListTile(String text, IconData icon) {
+    return GestureDetector(
+      onTap: () => print(text),
+      child: ListTile(
+        title: Row(
+          children: [
+            Icon(icon),
+            SizedBox(width: 30,),
+            Text(text)
+          ],
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.credit_card),
-          label: "Cards",
-        )
-      ],
-      currentIndex: _selectedIndex,
-      onTap: _onItemTapped,
+      ),
     );
   }
 }

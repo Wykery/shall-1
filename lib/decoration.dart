@@ -12,9 +12,8 @@ class UIDecoration {
 
   static BoxDecoration boxDecoration() {
     return BoxDecoration(
-      boxShadow: [ UIDecoration.boxShadow()],
-      borderRadius: BorderRadius.circular(15),
-      color: Colors.green[600],
+      color: const Color.fromARGB(255, 248, 248, 248),
+      border: Border.all(color: Colors.black, width: 2)
     );
   }
 }

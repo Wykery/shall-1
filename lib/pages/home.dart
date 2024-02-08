@@ -4,7 +4,9 @@ import 'package:shall/decoration.dart';
 import 'package:shall/models/category.dart';
 import 'package:shall/models/shop.dart';
 import 'package:shall/header_text.dart';
+import 'package:shall/pages/outifit.dart';
 
+// ignore: must_be_immutable
 class HomePage extends StatelessWidget {
   HomePage({super.key});
 
@@ -14,7 +16,7 @@ class HomePage extends StatelessWidget {
 
   List<Shop> shops = [];
   static const double shopsElemWidth = 130;
-  static const double shopsElemHeight = 150;
+  static const double shopsElemHeight = 100;
 
 
   @override
@@ -25,49 +27,53 @@ class HomePage extends StatelessWidget {
   }
 
   Widget pageBody(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [      
-          headerText("Categories"),
-          SizedBox(
-            height: 10,
-          ),
-          horizontalCategoryScroll(categoriesElemHeight, categoriesElemWidth, categories),  
-
-          headerText("Top shops"),
-          shopsGrid(shops, shopsElemHeight, shopsElemWidth, context)
-        ],
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [      
+            headerText("Categories"),
+            SizedBox(
+              height: 10,
+            ),
+            horizontalCategoryScroll(categoriesElemHeight, categoriesElemWidth, categories),  
+      
+            headerText("Top shops"),
+            shopsGrid(shops, shopsElemHeight, shopsElemWidth, context),
+            Container(
+              decoration: BoxDecoration (border: Border.all(color: Colors.black, width: 2)),
+              child: Center(child: Text("More") ,
+              ),
+            ),
+            SizedBox(height: 56)
+          ],
+        ),
       ),
     );
   }
 
   SizedBox shopsGrid(List<Shop> elements, double elemHeight, double elemWidth, BuildContext context) {
     return SizedBox(
-          height: elements.length ~/ 2 * (elemHeight + 20) + 20,
+      height: elements.length * elemHeight-(elemHeight*2),
           child: GridView.count(
             childAspectRatio: elemWidth / elemHeight,
-            padding: EdgeInsets.only(left: 20, right: 20),
-            mainAxisSpacing: 20,
-            crossAxisSpacing: 20,
             crossAxisCount: 2,
             physics: NeverScrollableScrollPhysics(),
             children: List.generate(elements.length, (index) {
               return Container(
                 decoration: UIDecoration.boxDecoration(),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Container(
-                      padding: EdgeInsets.all(5),
-                      child: SvgPicture.asset(elements[index].imagePath,)
-                    ),
+                      Container(
+                        padding: EdgeInsets.all(5), 
+                        child: SvgPicture.asset(elements[index].imagePath, height: shopsElemHeight, width: shopsElemWidth)
+                      ),
                   ],
                 ),
               );
             }),
           ),
-        );
+    );
   }
 
   SizedBox horizontalCategoryScroll(double height, double width, List<Category> scrollable) {
@@ -80,15 +86,15 @@ class HomePage extends StatelessWidget {
           return Container(
             width: width,
             decoration: BoxDecoration(
-              color: Colors.green[600],
               borderRadius: BorderRadius.circular(15),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0x401D1617),
-                  blurRadius: 40,
-                  spreadRadius: 0,
-                )
-              ]
+              border: Border.all(color: Colors.black, width: 4),
+              // boxShadow: [
+              //   BoxShadow(
+              //     color: const Color(0x401D1617),
+              //     blurRadius: 40,
+              //     spreadRadius: 0,
+              //   )
+              // ]
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -96,8 +102,12 @@ class HomePage extends StatelessWidget {
                 Icon(
                   scrollable[index].icon,
                   size: width * 0.60,
+                  color: Colors.black,
                 ),
-                Text(scrollable[index].name),
+                Text(
+                  scrollable[index].name,
+                  style: TextStyle(color: Colors.black),
+                  ),
               ],
 
             ),
@@ -133,17 +143,29 @@ class HomePage extends StatelessWidget {
     List<Shop> shops = [];
 
     shops.add(
-      Shop(name: "Maxima", imagePath: "images/louis_vuitton.svg", height: shopsElemHeight, width: shopsElemWidth)
+      Shop(name: "Louis Vuitton", imagePath: "images/louis_vuitton.svg", height: shopsElemHeight, width: shopsElemWidth)
     );
     shops.add(
-      Shop(name: "Lidl", imagePath: "images/hm.svg", height: shopsElemHeight, width: shopsElemWidth)
+      Shop(name: "HM", imagePath: "images/hm.svg", height: shopsElemHeight, width: shopsElemWidth)
     );
     shops.add(
-      Shop(name: "Hesburger", imagePath: "images/zara.svg", height: shopsElemHeight, width: shopsElemWidth)
+      Shop(name: "Zara", imagePath: "images/zara.svg", height: shopsElemHeight, width: shopsElemWidth)
     );
-    // shops.add(
-    //   Shop(name: "Senukai", imagePath: "images/senukai.svg", height: shopsElemHeight, width: shopsElemWidth)
-    // );
+    shops.add(
+      Shop(name: "Adidas", imagePath: "images/adidas.svg", height: shopsElemHeight, width: shopsElemWidth)
+    );
+    shops.add(
+      Shop(name: "Nike", imagePath: "images/nike.svg", height: shopsElemHeight, width: shopsElemWidth)
+    );
+    shops.add(
+      Shop(name: "Puma", imagePath: "images/puma.svg", height: shopsElemHeight, width: shopsElemWidth)
+    );
+    shops.add(
+      Shop(name: "Sportland", imagePath: "images/sportland.svg", height: shopsElemHeight, width: shopsElemWidth)
+    );
+    shops.add(
+      Shop(name: "Tommy Hilfiger", imagePath: "images/tommy_hilfiger.svg", height: shopsElemHeight, width: shopsElemWidth)
+    );
 
     return shops;
   }}

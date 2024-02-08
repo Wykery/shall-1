@@ -35,4 +35,16 @@ flutter:
           weight: 300
         - asset: fonts/Rubik-Regular.ttf
           weight: 500
+    - family: Coolvetica
+      fonts:
+        - asset: fonts/coolvetica_compressed_hv.otf
+          weight: 800
+        - asset: fonts/coolvetica_condensed_rg.otf
+          weight: 300
+        - asset: fonts/coolvetica_crammed_rg.otf
+          weight: 100
+        - asset: fonts/coolvetica_rg_it.otf
+          style: italic
+        - asset: fonts/coolvetica_rg.otf
+          weight: 500
   uses-material-design: true
